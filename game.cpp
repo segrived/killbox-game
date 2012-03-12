@@ -74,7 +74,7 @@ void Game::createNewOpponent() {
     Opponent o;
     o.coord.x = (rand() % 100 - 50) / (float)50;
     o.coord.y = 1.0f;
-    if(rand() % OPP_BOSS_FREQ == 0) {
+    if(rand() % OPP_BOSS_CHANCE == 0) {
 		o.lifes = OPP_BOSS_LIFES;
 		o.type = BOSS;
 	} else {
@@ -131,11 +131,11 @@ void Game::drawScene() {
 			float ox = (*oi).coord.x;
 			float oy = (*oi).coord.y;
 			float h = OPP_SIZE / 2;
-			if((*oi).type == BOSS) h = h / OPP_BOSS_DIVIDE_DELTA;
-			if(
-				(bx > ox - h) && (bx < ox + h)
-			 && (by > oy - h) && (by < oy + h)
-			) {
+			if((*oi).type == BOSS) {
+                h = h / OPP_BOSS_DIVIDE_DELTA;
+            }
+            // Пуля попала во врага
+			if((bx > ox - h) && (bx < ox + h) && (by > oy - h) && (by < oy + h)) {
 				if(--(*oi).lifes == 0) {
 					if((*oi).type = BOSS) {
 						score += OPP_POINTS_PER_BOSS;
@@ -143,7 +143,7 @@ void Game::drawScene() {
 					opponents.erase(oi);
 				}
 				bullets.erase(bi);
-				score += POINTS_PER_GOOD;
+				score += POINTS_PER_HIT;
 				continue;
 		}
 		}
