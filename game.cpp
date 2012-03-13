@@ -15,13 +15,9 @@ void shutdown(int returnCode) {
 }
 
 void onKeyPress(int key, int action) { game.onKeyPress(key, action); }
-void onMouseMove(int x, int y) { game.onMouseMove(x, y); }
 
 void enableCallbackBinds() {
     glfwSetKeyCallback(&onKeyPress);
-    if(__ENABLE_MOUSE) {
-        glfwSetMousePosCallback(&onMouseMove);
-    }
 }
 
 Game::Game() {
@@ -50,8 +46,9 @@ void Game::playSound(const char* fileName) {
 void Game::initGraphicSystem(int width, int height, const char* title) {
     if (glfwInit() != GL_TRUE)
         shutdown(1);
-    if (glfwOpenWindow(width, height, 5, 6, 5, 0, 0, 0, GLFW_WINDOW) != GL_TRUE)
-        shutdown(1);
+    
+    int mode = (FULL_SCREEN) ? GLFW_FULLSCREEN : GLFW_WINDOW;
+    glfwOpenWindow(width, height, 5, 6, 5, 0, 0, 0, mode);
     glfwSetWindowTitle(title);
     glfwSwapInterval(1);
     
@@ -86,10 +83,10 @@ void Game::createNewOpponent() {
 		o.type = NORMAL;
         o.size = OPP_SIZE;
 	}
-    float cr = (rand() % 100) / 100.0f;
-    float cg = (rand() % 100) / 100.0f;
-    float cb = (rand() % 100) / 100.0f;
-    o.opColor = {cr, cg, cb};
+    float cr = ((rand() % 80) / 100.0f) + 0.2f;
+    float cg = ((rand() % 80) / 100.0f) + 0.2f;
+    float cb = ((rand() % 80) / 100.0f) + 0.2f;
+    o.color = {cr, cg, cb};
     opponents.push_back(o);
 }
 
@@ -106,23 +103,10 @@ void Game::onKeyPress(int key, int action) {
     }
 }
 
-void Game::onMouseMove(int x, int y) {
-    Coord c = convertCoords(x, y);
-    machinePosition = c.x;
-}
-
-Coord Game::convertCoords(int x, int y) {
-    pCoord winSize = getWindowSize();
-    Coord newCoords;
-    newCoords.x = (x - (float)winSize.x / 2) / ((float)winSize.x / 2);
-    newCoords.y = -(y - (float)winSize.y / 2) / ((float)winSize.y / 2);
-    return newCoords;
-}
-
-pCoord Game::getWindowSize() {
-    pCoord pc;
-    glfwGetWindowSize(&pc.x, &pc.y);
-    return pc;
+iCoord Game::getWindowSize() {
+    iCoord ic;
+    glfwGetWindowSize(&ic.x, &ic.y);
+    return ic;
 }
 
 void Game::drawScene() {
@@ -190,13 +174,13 @@ void Game::drawAllOpponents() {
 void Game::drawKillMachine() {
     float h = MACHINE_SIZE / 2;
     glBegin(GL_POLYGON);
-        glColor3f(0.2f, 0.2f, 0.2f);
+        Drawer::setColor(0.2f, 0.2f, 0.2f);
         glVertex2f(machinePosition - h, -1.0f);
-        glColor3f(0.4f, 0.4f, 0.4f);
+        Drawer::setColor(0.4f, 0.4f, 0.4f);
         glVertex2f(machinePosition + h, -1.0f);
-        glColor3f(0.6f, 0.6f, 0.6f);
+        Drawer::setColor(0.6f, 0.6f, 0.6f);
         glVertex2f(machinePosition + h, -0.95f);
-        glColor3f(0.8f, 0.8f, 0.8f);
+        Drawer::setColor(0.8f, 0.8f, 0.8f);
         glVertex2f(machinePosition - h, -0.95f);
     glEnd();
 }
@@ -220,7 +204,7 @@ void Game::drawBullet(Bullet b) {
 }
 
 void Game::drawOpponent(Opponent o) {
-    glColor3f(o.opColor.r, o.opColor.g, o.opColor.b);
+    Drawer::setColor(o.color);
     Drawer::drawBox(o.coord.x, o.coord.y, o.size);
 }
 
@@ -228,5 +212,13 @@ void Game::drawOpponent(Opponent o) {
 
 int main(int argc, char ** argv) {
     game.initAudioSystem();
-    game.initGraphicSystem(500, 500, "Killbox Game");
+    int height, width;
+    if(FULL_SCREEN) {
+        height = FULLSCREEN_MODE_HEIGHT;
+        width = FULLSCREEN_MODE_WIDTH;
+    } else {
+        height = WINDOW_MODE_HEIGHT;
+        width = WINDOW_MODE_WIDTH;
+    }
+    game.initGraphicSystem(height, width, "Killbox Game");
 }

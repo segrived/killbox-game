@@ -1,8 +1,13 @@
-// Параметр, определяющий, будет ли скопилировано приложение
-// с поддержкой мыши или нет
-#define __ENABLE_MOUSE false
+// Размеры экрана для оконного и полноэкранного режимов
+#define WINDOW_MODE_HEIGHT 400
+#define WINDOW_MODE_WIDTH 400
+#define FULLSCREEN_MODE_HEIGHT 800
+#define FULLSCREEN_MODE_WIDTH 600
 
-// Разсер врага
+// запускать в полноэкранном режиме
+#define FULL_SCREEN true
+
+// Размер врага
 #define OPP_SIZE 0.2f
 // Стартовая скорость врагов
 #define OPP_STARTING_SPEED 0.01f

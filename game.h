@@ -6,7 +6,6 @@
 
 void shutdown(int returnCode);
 void onKeyPress(int key, int action);
-void onMouseMove(int x, int y);
 void enableCallbackBinds();
 
 /** KILLBOXGAME CLASS **/
@@ -23,21 +22,14 @@ class Game {
         std::vector<Opponent> opponents;
     public:
         Game();
-        pCoord getWindowSize();
-        Coord convertCoords(int x, int y);
-
+        iCoord getWindowSize();
         void onKeyPress(int key, int action);
-        void onMouseMove(int x, int y);
-        
         void initAudioSystem();
         void initGraphicSystem(int width, int height, const char* title);
-        
         void startMainLoop();
         void checkPressedKeys();
         void playSound(const char* fileName);
-   
         void createNewOpponent();
-   
         void drawScene();
         void drawKillMachine();
         void drawAllBullets();

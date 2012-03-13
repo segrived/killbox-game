@@ -7,12 +7,12 @@ struct Color {
     float b;
 };
 
-struct Coord {
+typedef struct fCoord {
     float x;
     float y;
-};
+} Coord;
 
-struct pCoord {
+struct iCoord {
     int x;
     int y;
 };
@@ -30,7 +30,7 @@ struct Opponent {
     int lifes;
     float size;
     opponentType type;
-    Color opColor;
+    Color color;
 };
 
 #endif
