@@ -1,7 +1,9 @@
 #include <iostream>
 #include <GL/glfw.h>
 #include <fmodex/fmod.hpp>
+#include "options.h"
 #include "game.h"
+#include "drawer.h"
 
 // Первый и единственный экземпляр класса Game (глобальный)
 Game game;
@@ -77,9 +79,11 @@ void Game::createNewOpponent() {
     if(rand() % OPP_BOSS_CHANCE == 0) {
 		o.lifes = OPP_BOSS_LIFES;
 		o.type = BOSS;
+        o.size = OPP_SIZE * OPP_BOSS_SIZE_MULTIPLER;
 	} else {
 		o.lifes = 1;
 		o.type = NORMAL;
+        o.size = OPP_SIZE;
 	}
     float cr = (rand() % 100) / 100.0f;
     float cg = (rand() % 100) / 100.0f;
@@ -130,22 +134,17 @@ void Game::drawScene() {
 		for(oi = opponents.begin(); oi < opponents.end(); oi++) {
 			float ox = (*oi).coord.x;
 			float oy = (*oi).coord.y;
-			float h = OPP_SIZE / 2;
-			if((*oi).type == BOSS) {
-                h = h / OPP_BOSS_DIVIDE_DELTA;
-            }
+			float hs = (*oi).size / 2;
             // Пуля попала во врага
-			if((bx > ox - h) && (bx < ox + h) && (by > oy - h) && (by < oy + h)) {
+			if((bx > ox - hs) && (bx < ox + hs) && (by > oy - hs) && (by < oy + hs)) {
 				if(--(*oi).lifes == 0) {
-					if((*oi).type = BOSS) {
-						score += OPP_POINTS_PER_BOSS;
-					}
+					score += ((*oi).type == BOSS) ? OPP_POINTS_PER_BOSS : 0;
 					opponents.erase(oi);
 				}
+                score += POINTS_PER_HIT;
 				bullets.erase(bi);
-				score += POINTS_PER_HIT;
 				continue;
-		}
+            }
 		}
 	}
     drawAllBullets();
@@ -178,7 +177,8 @@ void Game::drawAllOpponents() {
         drawOpponent(*oi);
         if(((*oi).coord.y -= opponentSpeed) < -1.0f) {
 			if(--lifes == 0) {
-				std::cout << "Game over. Your Result: " << score << "!!!" << std::endl;
+				std::cout << "Game over. Your Result: "
+                          << score << std::endl;
 				exit(0);
 			}
             opponents.erase(oi);
@@ -215,21 +215,12 @@ void Game::drawAllBullets() {
 }
 
 void Game::drawBullet(Bullet b) {
-    glBegin(GL_POINTS);
-        glVertex2f(b.coord.x, b.coord.y);
-    glEnd();
+    Drawer::drawPoint(b.coord.x, b.coord.y);
 }
 
-void Game::drawOpponent(Opponent opData) {
-    float h = OPP_SIZE / 2;
-    if (opData.type == BOSS) h = h / OPP_BOSS_DIVIDE_DELTA;
-    glColor3f(opData.opColor.r, opData.opColor.g, opData .opColor.b);
-    glBegin(GL_QUADS);
-        glVertex2f(opData.coord.x - h, opData.coord.y - h);
-        glVertex2f(opData.coord.x - h, opData.coord.y + h);
-        glVertex2f(opData.coord.x + h, opData.coord.y + h);
-        glVertex2f(opData.coord.x + h, opData.coord.y - h);
-    glEnd();
+void Game::drawOpponent(Opponent o) {
+    glColor3f(o.opColor.r, o.opColor.g, o.opColor.b);
+    Drawer::drawBox(o.coord.x, o.coord.y, o.size);
 }
 
 
