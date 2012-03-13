@@ -1,34 +1,8 @@
 #include <vector>
+#include "types.h"
 
-struct color {
-    float r;
-    float g;
-    float b;
-};
-
-struct Coord {
-    float x;
-    float y;
-};
-
-struct pCoord {
-    int x;
-    int y;
-};
-
-struct Bullet {
-    Coord coord;
-};
-
-enum opponentType { NORMAL, BOSS };
-
-struct Opponent {
-    Coord coord;
-    int lifes;
-    float size;
-    opponentType type;
-    color opColor;
-};
+#ifndef GAME_H_GUARD
+#define GAME_H_GUARD
 
 void shutdown(int returnCode);
 void onKeyPress(int key, int action);
@@ -72,4 +46,4 @@ class Game {
         void drawOpponent(Opponent opData);
 };
 
-
+#endif

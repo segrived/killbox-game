@@ -16,3 +16,15 @@ void Drawer::drawBox(float x, float y, float size) {
         glVertex2f(x + halfOfSize, y - halfOfSize);
     glEnd();
 }
+
+void Drawer::setColor(float r, float g, float b) {
+    glColor3f(r, g, b);
+}
+
+void Drawer::setColor(float r, float g, float b, float a) {
+    glColor4f(r, g, b, a);
+}
+
+void Drawer::setColor(Color c) {
+    glColor3f(c.r, c.g, c.b);
+}

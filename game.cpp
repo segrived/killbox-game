@@ -1,6 +1,7 @@
 #include <iostream>
 #include <GL/glfw.h>
 #include <fmodex/fmod.hpp>
+#include "types.h"
 #include "options.h"
 #include "game.h"
 #include "drawer.h"
