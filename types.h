@@ -20,15 +20,29 @@ struct Bullet {
 };
 
 typedef enum {
-    NORMAL, BOSS
-} opponentType;
+    FRAG_TYPE_NORMAL, FRAG_TYPE_BOSS
+} FragType;
+
+typedef enum {
+    BONUS_LIFES, BONUS_POINTS
+} BonusType;
+
+typedef enum {
+    MODE_WINDOW, MODE_FULLSCREEN
+} AppMode;
 
 struct Opponent {
     Coord<float, 3> coord;
     int lifes;
     float size;
-    opponentType type;
+    float startShift;
+    FragType type;
     Color color;
+};
+
+struct Bonus {
+    Coord<float, 2> coord;
+    BonusType type;
 };
 
 #endif

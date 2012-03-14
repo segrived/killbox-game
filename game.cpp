@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 #include <GL/glfw.h>
 #include <fmodex/fmod.hpp>
 #include "types.h"
@@ -14,6 +15,20 @@ void shutdown(int returnCode) {
     exit(returnCode);
 }
 
+void Game::parseOptions(int argc, char ** argv, const char * data) {
+    int result = 0;
+    while((result = getopt(argc, argv, data)) != -1) {
+        switch (result) {
+            case 'f':
+                game.isFullscreen = true; break;
+            case 'w':
+                game.isFullscreen = false; break;
+            default:
+                std::cout << "Error. Incorect parameter" << std::endl;
+        }
+    }
+}
+
 void onKeyPress(int key, int action) { game.onKeyPress(key, action); }
 
 void enableCallbackBinds() {
@@ -27,6 +42,7 @@ Game::Game() {
     opponentSpeed = FRAG_STARTING_SPEED;
     lifes = GAME_LIFES;
     score = 0;
+    isFullscreen = DEFAULT_FULLSCREEN;
 }
 
 void Game::initAudioSystem() {
@@ -46,8 +62,7 @@ void Game::playSound(const char* fileName) {
 void Game::initGraphicSystem(int width, int height, const char* title) {
     if (glfwInit() != GL_TRUE)
         shutdown(1);
-    
-    int mode = (FULL_SCREEN) ? GLFW_FULLSCREEN : GLFW_WINDOW;
+    int mode = (isFullscreen) ? GLFW_FULLSCREEN : GLFW_WINDOW;
     glfwOpenWindow(width, height, 5, 6, 5, 0, 0, 0, mode);
     glfwSetWindowTitle(title);
     glfwSwapInterval(1);
@@ -76,17 +91,18 @@ void Game::createNewOpponent() {
     o.coord.y = 1.0f;
     if(rand() % FRAG_BOSS_CHANCE == 0) {
 		o.lifes = FRAG_BOSS_LIFES;
-		o.type = BOSS;
+		o.type = FRAG_TYPE_BOSS;
         o.size = FRAG_SIZE * FRAG_BOSS_SIZE_MULTIPLER;
 	} else {
 		o.lifes = 1;
-		o.type = NORMAL;
+		o.type = FRAG_TYPE_NORMAL;
         o.size = FRAG_SIZE;
 	}
     float cr = ((rand() % 80) / 100.0f) + 0.2f;
     float cg = ((rand() % 80) / 100.0f) + 0.2f;
     float cb = ((rand() % 80) / 100.0f) + 0.2f;
     o.color = {cr, cg, cb};
+    o.startShift = (rand() % 100) / 10.0f;
     opponents.push_back(o);
 }
 
@@ -120,10 +136,10 @@ void Game::drawScene() {
 			float ox = (*oi).coord.x;
 			float oy = (*oi).coord.y;
 			float hs = (*oi).size / 2;
-            // Пуля попала во врага
+            // Пуля попала в врага
 			if((bx > ox - hs) && (bx < ox + hs) && (by > oy - hs) && (by < oy + hs)) {
 				if(--(*oi).lifes == 0) {
-					score += ((*oi).type == BOSS) ? FRAG_POINTS_PER_BOSS : 0;
+					score += ((*oi).type == FRAG_TYPE_BOSS) ? FRAG_POINTS_PER_BOSS : 0;
 					opponents.erase(oi);
 				}
                 score += POINTS_PER_HIT;
@@ -159,6 +175,7 @@ void Game::drawAllOpponents() {
     opponentSpeed *= FRAG_ACCELERATION;
     std::vector<Opponent>::iterator oi;
     for (oi = opponents.begin(); oi < opponents.end(); ++oi) {
+        (*oi).coord.x = sin((*oi).coord.y + (*oi).startShift);
         drawOpponent(*oi);
         if(((*oi).coord.y -= opponentSpeed) < -1.0f) {
 			if(--lifes == 0) {
@@ -200,7 +217,9 @@ void Game::drawAllBullets() {
 }
 
 void Game::drawBullet(Bullet b) {
-    Drawer::drawPoint(b.coord.x, b.coord.y);
+    Drawer::setColor(1.0f, 0.0f, 0.0f);
+    //Drawer::drawPoint(b.coord.x, b.coord.y);
+    Drawer::drawBox(b.coord.x, b.coord.y, 0.02f);
 }
 
 void Game::drawOpponent(Opponent o) {
@@ -211,14 +230,12 @@ void Game::drawOpponent(Opponent o) {
 
 
 int main(int argc, char ** argv) {
+    // Включаем рандомизатор
+    srand(time(NULL));
+    game.parseOptions(argc, argv, "f");
     game.initAudioSystem();
     int height, width;
-    if(FULL_SCREEN) {
-        height = FULLSCREEN_MODE_HEIGHT;
-        width = FULLSCREEN_MODE_WIDTH;
-    } else {
-        height = WINDOW_MODE_HEIGHT;
-        width = WINDOW_MODE_WIDTH;
-    }
+    height = WINDOW_MODE_HEIGHT;
+    width = WINDOW_MODE_WIDTH;
     game.initGraphicSystem(height, width, "Killbox Game");
 }

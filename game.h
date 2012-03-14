@@ -14,6 +14,7 @@ class Game {
         FMOD::System *audioSys;
         float machinePosition;
         float opponentSpeed;
+        bool isFullscreen;
         bool running;
         double lastTimeStamp;
         int lifes;
@@ -36,6 +37,7 @@ class Game {
         void drawAllOpponents();
         void drawBullet(Bullet b);
         void drawOpponent(Opponent opData);
+        void parseOptions(int argc, char ** argv, const char * data);
 };
 
 #endif
