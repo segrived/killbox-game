@@ -24,7 +24,7 @@ Game::Game() {
     running = true;
     machinePosition = 0.0f;
     lastTimeStamp = glfwGetTime();
-    opponentSpeed = OPP_STARTING_SPEED;
+    opponentSpeed = FRAG_STARTING_SPEED;
     lifes = GAME_LIFES;
     score = 0;
 }
@@ -59,7 +59,7 @@ void Game::initGraphicSystem(int width, int height, const char* title) {
 
 void Game::startMainLoop() {
     double glfwTime = glfwGetTime();
-    if(glfwTime - lastTimeStamp >= OPP_GEN_PAUSE) {
+    if(glfwTime - lastTimeStamp >= FRAG_GEN_PAUSE) {
         createNewOpponent();
         lastTimeStamp = glfwTime;
     }
@@ -74,14 +74,14 @@ void Game::createNewOpponent() {
     Opponent o;
     o.coord.x = (rand() % 100 - 50) / (float)50;
     o.coord.y = 1.0f;
-    if(rand() % OPP_BOSS_CHANCE == 0) {
-		o.lifes = OPP_BOSS_LIFES;
+    if(rand() % FRAG_BOSS_CHANCE == 0) {
+		o.lifes = FRAG_BOSS_LIFES;
 		o.type = BOSS;
-        o.size = OPP_SIZE * OPP_BOSS_SIZE_MULTIPLER;
+        o.size = FRAG_SIZE * FRAG_BOSS_SIZE_MULTIPLER;
 	} else {
 		o.lifes = 1;
 		o.type = NORMAL;
-        o.size = OPP_SIZE;
+        o.size = FRAG_SIZE;
 	}
     float cr = ((rand() % 80) / 100.0f) + 0.2f;
     float cg = ((rand() % 80) / 100.0f) + 0.2f;
@@ -103,8 +103,8 @@ void Game::onKeyPress(int key, int action) {
     }
 }
 
-iCoord Game::getWindowSize() {
-    iCoord ic;
+Coord<int ,3> Game::getWindowSize() {
+    Coord<int, 3> ic;
     glfwGetWindowSize(&ic.x, &ic.y);
     return ic;
 }
@@ -123,7 +123,7 @@ void Game::drawScene() {
             // Пуля попала во врага
 			if((bx > ox - hs) && (bx < ox + hs) && (by > oy - hs) && (by < oy + hs)) {
 				if(--(*oi).lifes == 0) {
-					score += ((*oi).type == BOSS) ? OPP_POINTS_PER_BOSS : 0;
+					score += ((*oi).type == BOSS) ? FRAG_POINTS_PER_BOSS : 0;
 					opponents.erase(oi);
 				}
                 score += POINTS_PER_HIT;
@@ -156,7 +156,7 @@ void Game::checkPressedKeys() {
 }
 
 void Game::drawAllOpponents() {
-    opponentSpeed *= OPP_ACCELERATION;
+    opponentSpeed *= FRAG_ACCELERATION;
     std::vector<Opponent>::iterator oi;
     for (oi = opponents.begin(); oi < opponents.end(); ++oi) {
         drawOpponent(*oi);

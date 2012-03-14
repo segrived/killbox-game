@@ -22,7 +22,7 @@ class Game {
         std::vector<Opponent> opponents;
     public:
         Game();
-        iCoord getWindowSize();
+        Coord<int ,3> getWindowSize();
         void onKeyPress(int key, int action);
         void initAudioSystem();
         void initGraphicSystem(int width, int height, const char* title);

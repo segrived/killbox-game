@@ -1,24 +1,22 @@
 #ifndef TYPES_H_GUARD
 #define TYPES_H_GUARD
 
+template < typename type, int count >
+class Coord {
+	public:
+		type x;
+		type y;
+		type z;
+};
+
 struct Color {
     float r;
     float g;
     float b;
 };
 
-typedef struct fCoord {
-    float x;
-    float y;
-} Coord;
-
-struct iCoord {
-    int x;
-    int y;
-};
-
 struct Bullet {
-    Coord coord;
+    Coord<float, 3> coord;
 };
 
 typedef enum {
@@ -26,7 +24,7 @@ typedef enum {
 } opponentType;
 
 struct Opponent {
-    Coord coord;
+    Coord<float, 3> coord;
     int lifes;
     float size;
     opponentType type;
