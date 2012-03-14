@@ -128,6 +128,10 @@ Coord<int ,3> Game::getWindowSize() {
 void Game::drawScene() {
     glLoadIdentity();
     std::vector<Bullet>::iterator bi;
+    for(int i = 0; i < MAX_BULLETS_PER_SCREEN - bullets.size(); i++) {
+        Drawer::setColor(0.2f, 0.7f, 0.9f);
+        Drawer::drawBox((1 - i / 20.0f) - 0.05f, 0.95f, 0.03f);
+    }
     for(bi = bullets.begin(); bi < bullets.end(); bi++) {
 		std::vector<Opponent>::iterator oi;
 		float bx = (*bi).coord.x;

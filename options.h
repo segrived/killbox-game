@@ -24,13 +24,13 @@
 // Количество очков, дающихся дополнительно за убийства босса
 #define FRAG_POINTS_PER_BOSS 1000
 // Скорость путь
-#define BULLET_SPEED 0.05f
+#define BULLET_SPEED 0.025f
 // Размер машины
 #define MACHINE_SIZE 0.2f
 // Скорость перемещения машины
 #define MACHINE_SPEED 0.02f
 // Максимальное количество пуль на одном экане
-#define MAX_BULLETS_PER_SCREEN 4
+#define MAX_BULLETS_PER_SCREEN 6
 // Количество жизней у игрока
 #define GAME_LIFES 3
 // Количество очков за попадание
