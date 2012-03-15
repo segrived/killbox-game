@@ -25,6 +25,8 @@
 #define FRAG_POINTS_PER_BOSS 1000
 // Скорость путь
 #define BULLET_SPEED 0.025f
+// Размер пули
+#define BULLET_SIZE 0.02f
 // Размер машины
 #define MACHINE_SIZE 0.2f
 // Скорость перемещения машины
@@ -35,7 +37,10 @@
 #define GAME_LIFES 3
 // Количество очков за попадание
 #define POINTS_PER_HIT 100
-
+// Показывать или не показывать количество доступных пуль
+#define SHOW_AVAILABLE_BULLETS true
+// Показывать или не показывать количество доступных жизней
+#define SHOW_AVAILABLE_LIFES true
 // !!! not implemented !!!
 #define BONUS_CHANCE 20
 #define BONUS_SPEED_MIN 0.5f

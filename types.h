@@ -32,7 +32,7 @@ typedef enum {
 } AppMode;
 
 struct Opponent {
-    Coord<float, 3> coord;
+    Coord<float, 2> coord;
     int lifes;
     float size;
     float startShift;

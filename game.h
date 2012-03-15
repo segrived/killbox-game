@@ -23,7 +23,7 @@ class Game {
         std::vector<Opponent> opponents;
     public:
         Game();
-        Coord<int ,3> getWindowSize();
+        Coord<int ,2> getWindowSize();
         void onKeyPress(int key, int action);
         void initAudioSystem();
         void initGraphicSystem(int width, int height, const char* title);
@@ -38,6 +38,8 @@ class Game {
         void drawBullet(Bullet b);
         void drawOpponent(Opponent opData);
         void parseOptions(int argc, char ** argv, const char * data);
+        void showAvailableBullets();
+        void drawAvailableLifes();
 };
 
 #endif

@@ -17,6 +17,19 @@ void Drawer::drawBox(float x, float y, float size) {
     glEnd();
 }
 
+void Drawer::drawHeart(float x, float y, float size) {
+    setColor(1.0f, 0.0f, 0.0f);
+    glBegin(GL_POLYGON);
+        glVertex2f(x, y - size);
+        glVertex2f(x - size, y);
+        glVertex2f(x - size, y + size);
+        glVertex2f(x, y + size / 2.0f);
+        glVertex2f(x + size, y + size);
+        glVertex2f(x + size, y);
+        glVertex2f(x, y - size);
+    glEnd();
+}
+
 void Drawer::setColor(float r, float g, float b) {
     glColor3f(r, g, b);
 }

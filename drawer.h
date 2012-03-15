@@ -10,6 +10,7 @@ class Drawer {
         static void setColor(float r, float g, float b);
         static void setColor(float r, float g, float b, float a);
         static void setColor(Color c);
+        static void drawHeart(float x, float y, float size);
 };
 
 #endif

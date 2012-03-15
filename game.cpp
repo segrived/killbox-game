@@ -119,8 +119,8 @@ void Game::onKeyPress(int key, int action) {
     }
 }
 
-Coord<int ,3> Game::getWindowSize() {
-    Coord<int, 3> ic;
+Coord<int ,2> Game::getWindowSize() {
+    Coord<int, 2> ic;
     glfwGetWindowSize(&ic.x, &ic.y);
     return ic;
 }
@@ -128,10 +128,18 @@ Coord<int ,3> Game::getWindowSize() {
 void Game::drawScene() {
     glLoadIdentity();
     std::vector<Bullet>::iterator bi;
-    for(int i = 0; i < MAX_BULLETS_PER_SCREEN - bullets.size(); i++) {
+    
+
+    if(SHOW_AVAILABLE_BULLETS) {
         Drawer::setColor(0.2f, 0.7f, 0.9f);
-        Drawer::drawBox((1 - i / 20.0f) - 0.05f, 0.95f, 0.03f);
+        showAvailableBullets();
     }
+    
+    if(SHOW_AVAILABLE_LIFES) {
+        Drawer::setColor(1.0f, 0.0f, 0.0f);
+        drawAvailableLifes();
+    }
+    
     for(bi = bullets.begin(); bi < bullets.end(); bi++) {
 		std::vector<Opponent>::iterator oi;
 		float bx = (*bi).coord.x;
@@ -155,6 +163,18 @@ void Game::drawScene() {
     drawAllBullets();
     drawAllOpponents();
     drawKillMachine();
+}
+
+void Game::showAvailableBullets() {
+    for(int i = 0; i < MAX_BULLETS_PER_SCREEN - bullets.size(); i++) {
+        Drawer::drawBox((1 - i / 20.0f) - 0.05f, 0.95f, 0.03f);
+    }
+}
+
+void Game::drawAvailableLifes() {
+    for(int i = 0; i < lifes; i++) {
+        Drawer::drawHeart((i / 20.0f) - 0.95f, 0.95f, 0.02f);
+    }
 }
 
 void Game::checkPressedKeys() {
@@ -221,9 +241,8 @@ void Game::drawAllBullets() {
 }
 
 void Game::drawBullet(Bullet b) {
-    Drawer::setColor(1.0f, 0.0f, 0.0f);
-    //Drawer::drawPoint(b.coord.x, b.coord.y);
-    Drawer::drawBox(b.coord.x, b.coord.y, 0.02f);
+    Drawer::setColor(1.0f, 1.0f, 0.0f);
+    Drawer::drawBox(b.coord.x, b.coord.y, BULLET_SIZE);
 }
 
 void Game::drawOpponent(Opponent o) {
