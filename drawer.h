@@ -11,6 +11,7 @@ class Drawer {
         static void setColor(float r, float g, float b, float a);
         static void setColor(Color c);
         static void drawHeart(float x, float y, float size);
+        static void drawCircle(float cx, float cy, float r, int segments, bool filled);
 };
 
 #endif

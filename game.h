@@ -21,6 +21,7 @@ class Game {
         int score;
         std::vector<Bullet> bullets;
         std::vector<Opponent> opponents;
+        std::vector<Bonus> bonuses;
     public:
         Game();
         Coord<int ,2> getWindowSize();
@@ -40,6 +41,8 @@ class Game {
         void parseOptions(int argc, char ** argv, const char * data);
         void showAvailableBullets();
         void drawAvailableLifes();
+        void drawBonus(Bonus b);
+        void drawAllBonuses();
 };
 
 #endif

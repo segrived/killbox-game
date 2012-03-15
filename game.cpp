@@ -104,6 +104,11 @@ void Game::createNewOpponent() {
     o.color = {cr, cg, cb};
     o.startShift = (rand() % 100) / 10.0f;
     opponents.push_back(o);
+    
+    Bonus b;
+    b.coord.y = 1.0f;
+    b.coord.x = 0.0f;
+    bonuses.push_back(b);
 }
 
 void Game::onKeyPress(int key, int action) {
@@ -162,6 +167,7 @@ void Game::drawScene() {
 	}
     drawAllBullets();
     drawAllOpponents();
+    drawAllBonuses();
     drawKillMachine();
 }
 
@@ -212,6 +218,14 @@ void Game::drawAllOpponents() {
     }
 }
 
+void Game::drawAllBonuses() {
+	std::vector<Bonus>::iterator bi;
+	for(bi = bonuses.begin(); bi < bonuses.end(); ++bi) {
+		drawBonus(*bi);
+		(*bi).coord.y -= 0.01;
+	}
+}
+
 void Game::drawKillMachine() {
     float h = MACHINE_SIZE / 2;
     glBegin(GL_POLYGON);
@@ -242,12 +256,17 @@ void Game::drawAllBullets() {
 
 void Game::drawBullet(Bullet b) {
     Drawer::setColor(1.0f, 1.0f, 0.0f);
-    Drawer::drawBox(b.coord.x, b.coord.y, BULLET_SIZE);
+    Drawer::drawCircle(b.coord.x, b.coord.y, BULLET_SIZE, 10, true);
 }
 
 void Game::drawOpponent(Opponent o) {
     Drawer::setColor(o.color);
     Drawer::drawBox(o.coord.x, o.coord.y, o.size);
+}
+
+void Game::drawBonus(Bonus b) {
+	Drawer::setColor(0.0f, 0.0f, 1.0f);
+	Drawer::drawBox(b.coord.x, b.coord.y, BONUS_SIZE);
 }
 
 

@@ -1,4 +1,5 @@
 #include <GL/glfw.h>
+#include <cmath>
 #include "drawer.h"
 
 void Drawer::drawPoint(float x, float y) {
@@ -28,6 +29,21 @@ void Drawer::drawHeart(float x, float y, float size) {
         glVertex2f(x + size, y);
         glVertex2f(x, y - size);
     glEnd();
+}
+
+void Drawer::drawCircle(float cx, float cy, float r, int segments, bool filled) {
+    if(filled) {
+        glBegin(GL_POLYGON); 
+    } else {
+        glBegin(GL_LINE_STRIP); 
+    }
+    for(int i = 0; i < segments; i++) {
+        float theta = 2.0f * M_PI * float(i) / float(segments);
+        float x = r * cosf(theta);
+        float y = r * sinf(theta);
+        glVertex2f(x + cx, y + cy);
+    } 
+    glEnd(); 
 }
 
 void Drawer::setColor(float r, float g, float b) {

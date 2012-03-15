@@ -26,7 +26,7 @@
 // Скорость путь
 #define BULLET_SPEED 0.025f
 // Размер пули
-#define BULLET_SIZE 0.02f
+#define BULLET_SIZE 0.015f
 // Размер машины
 #define MACHINE_SIZE 0.2f
 // Скорость перемещения машины
@@ -34,7 +34,7 @@
 // Максимальное количество пуль на одном экане
 #define MAX_BULLETS_PER_SCREEN 6
 // Количество жизней у игрока
-#define GAME_LIFES 3
+#define GAME_LIFES 5
 // Количество очков за попадание
 #define POINTS_PER_HIT 100
 // Показывать или не показывать количество доступных пуль
@@ -42,6 +42,7 @@
 // Показывать или не показывать количество доступных жизней
 #define SHOW_AVAILABLE_LIFES true
 // !!! not implemented !!!
+#define BONUS_SIZE 0.05f
 #define BONUS_CHANCE 20
 #define BONUS_SPEED_MIN 0.5f
 #define BONUS_SPEED_MAX 1.0f
