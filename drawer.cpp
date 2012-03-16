@@ -73,3 +73,14 @@ void Drawer::drawBullet(Coord<float> coord, float size) {
     Drawer::setColor(1.0f, 1.0f, 0.0f);
     Drawer::drawCircle(coord.x, coord.y, size, 10, true);
 }
+
+void Drawer::drawBonus(Coord<float> coord, float size, int type) {
+	Drawer::setColor(0.5f, 0.5f, 0.5f);
+	Drawer::drawCircle(coord.x, coord.y, size, 20, true);
+    if (type == BONUS_LIFE) {
+        Drawer::drawHeart(coord.x, coord.y, size / 2.0f);
+    } else if (type == BONUS_POINTS) {
+        Drawer::setColor(0.0f, 0.0f, 0.0f);
+        Drawer::drawBox(coord.x, coord.y, size / 2.0f);
+    }
+}

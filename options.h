@@ -8,49 +8,40 @@ namespace Options
 
 	// Опции пули
 	namespace Bullet {
-		// Размер
-		const float size = 0.01f;
-		// Скорость
-		const float speed = 0.025f;
-		// Максимальное количество на одном экране
-		const int maxPerScreen = 6;
+		const float size = 0.01f;   // Размер
+		const float speed = 0.025f; // Скорость
+		const int maxPerScreen = 6; // Максимальное количество на одном экране
 	}
-	
 	
 	// Опции машины
 	namespace Machine {
-		// Размер
-		const float size = 0.2f;
-		// Скорость передвижения
-		const float speed = 0.02f;
+		const float size = 0.2f;   // Размер
+		const float speed = 0.02f; // Скорость
 	}
 	
-    
 	// Опции фрага
 	namespace Frag {
-		// Размер
-		const float size = 0.2f;
-		// Стартовая скорость
-		const float startSpeed = 0.01f;
-		// Ускорение (на каждый отрисованый кадр)
-		const float acceleration = 1.0002f;
-		// Промежуток между генерацией врагов (значение в десятых секунды)
-		const int generatingSpeed = 20;
-		// Количество очков за попадание
-        const int pointsPerHit = 100;
-        
-        // Обции босса
+		const float size = 0.2f;            // Размер
+		const float startSpeed = 0.01f;     // Стартовая скорость
+		const float acceleration = 1.0002f; // Ускорение (на каждый отрисованый кадр)
+		const int generatingSpeed = 20;     // Промежуток между генерацией врагов (в долях секунды)
+        const int pointsPerHit = 100;       // Количество очков за попадание
+        // Опции босса
 		namespace Boss {
-			// Количество жизней
-			const int lifes = 3;
-			// Вероятность генерации босса (1 / значение)
-			const int chance = 10;
-			// Размер босса относительно обычного врага
-			const float sizeMultipler = 1.4f;
-            // Количество дополнительных очков за убийства босса
-            const int pointsPerKill = 100;
+			const int lifes = 3;              // Количество жизней
+			const int chance = 10;            // Вероятность генерации босса (1 / значение)
+			const float sizeMultipler = 1.4f; // Размер босса относительно обычного врага
+            const int pointsPerKill = 100;    // Количество дополнительных очков за убийства босса
 		}
 	}
+    
+    // Опции бонуса
+    namespace Bonus {
+        const float size = 0.05f;    // Размер
+        const int chance = 150;      // Шанс выпадения (1/значение в долю секунды)
+        const float minSpeed = 0.5f; // Минимальная скорость
+        const float maxSpeed = 1.0f; // Максимальная скорость
+    }
 }
 
 // Размеры экрана для оконного и полноэкранного режимов
@@ -66,8 +57,3 @@ namespace Options
 #define SHOW_AVAILABLE_BULLETS true
 // Показывать или не показывать количество доступных жизней
 #define SHOW_AVAILABLE_LIFES true
-// !!! not implemented !!!
-#define BONUS_SIZE 0.1f
-#define BONUS_CHANCE 20
-#define BONUS_SPEED_MIN 0.5f
-#define BONUS_SPEED_MAX 1.0f

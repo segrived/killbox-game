@@ -77,7 +77,7 @@ void Game::timerTick(int ticksFromStart) {
     if(ticksFromStart % Options::Frag::generatingSpeed == 0) {
         createNewOpponent();
     }
-    if(rand() % 150 == 0) {
+    if(rand() % Options::Bonus::chance == 0) {
         createNewBonus();
     }
 }
@@ -119,6 +119,7 @@ void Game::createNewBonus() {
     Bonus b;
     float xCoord = (rand() % 100) / 100.f;
     b.coord = Coord<float>(xCoord, 1.0f);
+    b.type = rand() % 3;
     bonuses.push_back(b);
 }
 
@@ -142,7 +143,6 @@ void Game::drawScene() {
     glLoadIdentity();
     std::vector<Bullet>::iterator bi;
     
-
     if(SHOW_AVAILABLE_BULLETS) {
         Drawer::setColor(0.2f, 0.7f, 0.9f);
         showAvailableBullets();
@@ -174,6 +174,27 @@ void Game::drawScene() {
             }
 		}
 	}
+    
+    std::vector<Bonus>::iterator bonusIter;
+    float halfOfBonus = Options::Bonus::size / 2.f;
+    float halfOfMachine = Options::Machine::size / 2.f;
+    for(bonusIter = bonuses.begin(); bonusIter < bonuses.end(); bonusIter++) {
+        if((*bonusIter).coord.x - halfOfBonus <= machinePosition + halfOfMachine
+        && (*bonusIter).coord.x + halfOfBonus >= machinePosition - halfOfMachine
+        && (*bonusIter).coord.y -halfOfBonus <= -0.95f) {
+            switch((*bonusIter).type) {
+                case BONUS_LIFE:
+                    lifes++;
+                    break;
+                case BONUS_POINTS:
+                    score += 1000;
+                    break;
+                default:
+                    break;
+            }
+            bonuses.erase(bonusIter);
+        }
+    }
     drawAllBullets();
     drawAllOpponents();
     drawAllBonuses();
@@ -228,8 +249,11 @@ void Game::drawAllOpponents() {
 void Game::drawAllBonuses() {
 	std::vector<Bonus>::iterator bi;
 	for(bi = bonuses.begin(); bi < bonuses.end(); ++bi) {
-		drawBonus(*bi);
-		(*bi).coord.y -= 0.01;
+		Drawer::drawBonus((*bi).coord, Options::Bonus::size, (*bi).type);
+        (*bi).coord.y -= 0.01f;
+        if((*bi).coord.y <= -1.0f) {
+            bonuses.erase(bi);
+        }
 	}
 }
 
@@ -252,17 +276,11 @@ void Game::drawOpponent(Opponent o) {
     Drawer::drawBox(o.coord.x, o.coord.y, o.size);
 }
 
-void Game::drawBonus(Bonus b) {
-	Drawer::setColor(0.0f, 0.0f, 1.0f);
-	Drawer::drawCircle(b.coord.x, b.coord.y, BONUS_SIZE, 12, true);
-}
-
-
 
 int main(int argc, char ** argv) {
     // Включаем рандомизатор
     srand(time(NULL));
-    game.parseOptions(argc, argv, "f:w");
+    game.parseOptions(argc, argv, "fw");
     game.initAudioSystem();
     int height, width;
     height = WINDOW_MODE_HEIGHT;

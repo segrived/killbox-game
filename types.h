@@ -3,7 +3,12 @@
 #ifndef TYPES_H_GUARD
 #define TYPES_H_GUARD
 
-template <typename type> class Coord {
+#define BONUS_POINTS 0
+#define BONUS_LIFE 1
+#define BONUS_BULLETS 2
+
+template <typename type>
+class Coord {
 	public:
         Coord() {};
         Coord(type _x, type _y): x(_x), y(_y) {};
@@ -28,13 +33,8 @@ typedef enum {
 } FragType;
 
 typedef enum {
-    BONUS_LIFES, BONUS_POINTS
-} BonusType;
-
-typedef enum {
     MODE_WINDOW, MODE_FULLSCREEN
 } AppMode;
-
 
 struct Opponent {
     Coord<float> coord;
@@ -47,8 +47,8 @@ struct Opponent {
 
 struct Bonus {
     Coord<float> coord;
-    BonusType type;
+    int type;
+    float speed;
 };
-
 
 #endif
