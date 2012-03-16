@@ -43,6 +43,7 @@ Game::Game() {
     lifes = Options::Player::lifes;
     score = 0;
     isFullscreen = DEFAULT_FULLSCREEN;
+    ticksFromStart = 0;
 }
 
 void Game::initAudioSystem() {
@@ -72,14 +73,19 @@ void Game::initGraphicSystem(int width, int height, const char* title) {
     while(running) startMainLoop();
 }
 
+void Game::timerTick(int ticksFromStart) {
+    if(ticksFromStart % Options::Frag::generatingSpeed == 0) {
+        createNewOpponent();
+    }
+    if(rand() % 150 == 0) {
+        createNewBonus();
+    }
+}
 
 void Game::startMainLoop() {
 	double glfwTime = glfwGetTime();
-    if(glfwTime - lastTimeStamp >= Options::Frag::generatingSpeed) {
-        createNewOpponent();
-        if(rand() % 3 == 0) {
-            createNewBonus();
-        }
+    if(glfwTime - lastTimeStamp >= 0.1f) {
+        timerTick(ticksFromStart++);
         lastTimeStamp = glfwTime;
     }
     checkPressedKeys();
@@ -111,7 +117,8 @@ void Game::createNewOpponent() {
 
 void Game::createNewBonus() {
     Bonus b;
-    b.coord = Coord<float>(0.0f, 1.0f);
+    float xCoord = (rand() % 100) / 100.f;
+    b.coord = Coord<float>(xCoord, 1.0f);
     bonuses.push_back(b);
 }
 
@@ -170,7 +177,7 @@ void Game::drawScene() {
     drawAllBullets();
     drawAllOpponents();
     drawAllBonuses();
-    drawKillMachine();
+    Drawer::drawMachine(Options::Machine::size, machinePosition);
 }
 
 void Game::showAvailableBullets() {
@@ -226,20 +233,6 @@ void Game::drawAllBonuses() {
 	}
 }
 
-void Game::drawKillMachine() {
-    float h = Options::Machine::size / 2;
-    glBegin(GL_POLYGON);
-        Drawer::setColor(0.2f, 0.2f, 0.2f);
-        glVertex2f(machinePosition - h, -1.0f);
-        Drawer::setColor(0.4f, 0.4f, 0.4f);
-        glVertex2f(machinePosition + h, -1.0f);
-        Drawer::setColor(0.6f, 0.6f, 0.6f);
-        glVertex2f(machinePosition + h, -0.95f);
-        Drawer::setColor(0.8f, 0.8f, 0.8f);
-        glVertex2f(machinePosition - h, -0.95f);
-    glEnd();
-}
-
 // Функция рисует все запущенные патроны и перемещает их вверх
 void Game::drawAllBullets() {
     std::vector<Bullet>::iterator bi;
@@ -250,13 +243,8 @@ void Game::drawAllBullets() {
             continue;
         }
         // Рисуем пулю
-        drawBullet(*bi);
+        Drawer::drawBullet((*bi).coord, Options::Bullet::size);
     }
-}
-
-void Game::drawBullet(Bullet b) {
-    Drawer::setColor(1.0f, 1.0f, 0.0f);
-    Drawer::drawCircle(b.coord.x, b.coord.y, Options::Bullet::size, 10, true);
 }
 
 void Game::drawOpponent(Opponent o) {
@@ -266,7 +254,7 @@ void Game::drawOpponent(Opponent o) {
 
 void Game::drawBonus(Bonus b) {
 	Drawer::setColor(0.0f, 0.0f, 1.0f);
-	Drawer::drawBox(b.coord.x, b.coord.y, BONUS_SIZE);
+	Drawer::drawCircle(b.coord.x, b.coord.y, BONUS_SIZE, 12, true);
 }
 
 

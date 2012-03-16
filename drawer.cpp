@@ -54,3 +54,22 @@ void Drawer::setColor(float r, float g, float b, float a) {
 void Drawer::setColor(Color c) {
     glColor3f(c.r, c.g, c.b);
 }
+
+void Drawer::drawMachine(float size, float position) {
+    float h = size / 2;
+    glBegin(GL_POLYGON);
+        Drawer::setColor(0.2f, 0.2f, 0.2f);
+        glVertex2f(position - h, -1.0f);
+        Drawer::setColor(0.4f, 0.4f, 0.4f);
+        glVertex2f(position + h, -1.0f);
+        Drawer::setColor(0.6f, 0.6f, 0.6f);
+        glVertex2f(position + h, -0.95f);
+        Drawer::setColor(0.8f, 0.8f, 0.8f);
+        glVertex2f(position - h, -0.95f);
+    glEnd();
+}
+
+void Drawer::drawBullet(Coord<float> coord, float size) {
+    Drawer::setColor(1.0f, 1.0f, 0.0f);
+    Drawer::drawCircle(coord.x, coord.y, size, 10, true);
+}

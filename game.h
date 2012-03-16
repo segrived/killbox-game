@@ -19,10 +19,10 @@ class Game {
         double lastTimeStamp;
         int lifes;
         int score;
+        int ticksFromStart;
         std::vector<Bullet> bullets;
         std::vector<Opponent> opponents;
         std::vector<Bonus> bonuses;
-        std::vector<Timer> timers;
     public:
         Game();
         Coord<int> getWindowSize();
@@ -34,10 +34,8 @@ class Game {
         void playSound(const char* fileName);
         void createNewOpponent();
         void drawScene();
-        void drawKillMachine();
         void drawAllBullets();
         void drawAllOpponents();
-        void drawBullet(Bullet b);
         void drawOpponent(Opponent opData);
         void parseOptions(int argc, char ** argv, const char * data);
         void showAvailableBullets();
@@ -45,6 +43,7 @@ class Game {
         void drawBonus(Bonus b);
         void drawAllBonuses();
         void createNewBonus();
+        void timerTick(int ticksFromStart);
 };
 
 #endif

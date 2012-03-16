@@ -34,8 +34,8 @@ namespace Options
 		const float startSpeed = 0.01f;
 		// Ускорение (на каждый отрисованый кадр)
 		const float acceleration = 1.0002f;
-		// Промежуток между генерацией врагов
-		const float generatingSpeed = 2.0f;
+		// Промежуток между генерацией врагов (значение в десятых секунды)
+		const int generatingSpeed = 20;
 		// Количество очков за попадание
         const int pointsPerHit = 100;
         
@@ -67,7 +67,7 @@ namespace Options
 // Показывать или не показывать количество доступных жизней
 #define SHOW_AVAILABLE_LIFES true
 // !!! not implemented !!!
-#define BONUS_SIZE 0.05f
+#define BONUS_SIZE 0.1f
 #define BONUS_CHANCE 20
 #define BONUS_SPEED_MIN 0.5f
 #define BONUS_SPEED_MAX 1.0f
