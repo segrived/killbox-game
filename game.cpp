@@ -39,8 +39,8 @@ Game::Game() {
     running = true;
     machinePosition = 0.0f;
     lastTimeStamp = glfwGetTime();
-    opponentSpeed = FRAG_STARTING_SPEED;
-    lifes = GAME_LIFES;
+    opponentSpeed = Options::Frag::startSpeed;
+    lifes = Options::Player::lifes;
     score = 0;
     isFullscreen = DEFAULT_FULLSCREEN;
 }
@@ -68,14 +68,18 @@ void Game::initGraphicSystem(int width, int height, const char* title) {
     glfwSwapInterval(1);
     
     enableCallbackBinds();
-    
+   
     while(running) startMainLoop();
 }
 
+
 void Game::startMainLoop() {
-    double glfwTime = glfwGetTime();
-    if(glfwTime - lastTimeStamp >= FRAG_GEN_PAUSE) {
+	double glfwTime = glfwGetTime();
+    if(glfwTime - lastTimeStamp >= Options::Frag::generatingSpeed) {
         createNewOpponent();
+        if(rand() % 3 == 0) {
+            createNewBonus();
+        }
         lastTimeStamp = glfwTime;
     }
     checkPressedKeys();
@@ -87,16 +91,15 @@ void Game::startMainLoop() {
 
 void Game::createNewOpponent() {
     Opponent o;
-    o.coord.x = (rand() % 100 - 50) / (float)50;
-    o.coord.y = 1.0f;
-    if(rand() % FRAG_BOSS_CHANCE == 0) {
-		o.lifes = FRAG_BOSS_LIFES;
+    o.coord = Coord<float>((rand() % 100 - 50) / (float)50, 1.0f);
+    if(rand() % Options::Frag::Boss::chance == 0) {
+		o.lifes = Options::Frag::Boss::lifes;
 		o.type = FRAG_TYPE_BOSS;
-        o.size = FRAG_SIZE * FRAG_BOSS_SIZE_MULTIPLER;
+        o.size = Options::Frag::size * Options::Frag::Boss::sizeMultipler;
 	} else {
 		o.lifes = 1;
 		o.type = FRAG_TYPE_NORMAL;
-        o.size = FRAG_SIZE;
+        o.size = Options::Frag::size;
 	}
     float cr = ((rand() % 80) / 100.0f) + 0.2f;
     float cg = ((rand() % 80) / 100.0f) + 0.2f;
@@ -104,28 +107,26 @@ void Game::createNewOpponent() {
     o.color = {cr, cg, cb};
     o.startShift = (rand() % 100) / 10.0f;
     opponents.push_back(o);
-    
+}
+
+void Game::createNewBonus() {
     Bonus b;
-    b.coord.y = 1.0f;
-    b.coord.x = 0.0f;
+    b.coord = Coord<float>(0.0f, 1.0f);
     bonuses.push_back(b);
 }
 
 void Game::onKeyPress(int key, int action) {
     if ((key == GLFW_KEY_UP || key == ' ' || key == 'W') && action == GLFW_PRESS) {
-		if(bullets.size() >= MAX_BULLETS_PER_SCREEN) {
-			return;
-		}
+		if(bullets.size() >= Options::Bullet::maxPerScreen) return;
         Bullet b;
-        b.coord.x = machinePosition;
-        b.coord.y = -0.95f;
+        b.coord = Coord<float>(machinePosition, -0.95f);
         bullets.push_back(b);
         playSound("sounds/shot.wav");
     }
 }
 
-Coord<int ,2> Game::getWindowSize() {
-    Coord<int, 2> ic;
+Coord<int> Game::getWindowSize() {
+    Coord<int> ic;
     glfwGetWindowSize(&ic.x, &ic.y);
     return ic;
 }
@@ -156,10 +157,11 @@ void Game::drawScene() {
             // Пуля попала в врага
 			if((bx > ox - hs) && (bx < ox + hs) && (by > oy - hs) && (by < oy + hs)) {
 				if(--(*oi).lifes == 0) {
-					score += ((*oi).type == FRAG_TYPE_BOSS) ? FRAG_POINTS_PER_BOSS : 0;
+					score += ((*oi).type == FRAG_TYPE_BOSS) ? Options::Frag::Boss::pointsPerKill : 0;
 					opponents.erase(oi);
 				}
-                score += POINTS_PER_HIT;
+                score += Options::Frag::pointsPerHit;
+                playSound("sounds/kill.wav");
 				bullets.erase(bi);
 				continue;
             }
@@ -172,7 +174,7 @@ void Game::drawScene() {
 }
 
 void Game::showAvailableBullets() {
-    for(int i = 0; i < MAX_BULLETS_PER_SCREEN - bullets.size(); i++) {
+    for(int i = 0; i < Options::Bullet::maxPerScreen - bullets.size(); i++) {
         Drawer::drawBox((1 - i / 20.0f) - 0.05f, 0.95f, 0.03f);
     }
 }
@@ -184,25 +186,23 @@ void Game::drawAvailableLifes() {
 }
 
 void Game::checkPressedKeys() {
-    float hom = MACHINE_SIZE / 2;
-    
     // Нажата левая стрелка
     if ((glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) || (glfwGetKey('A') == GLFW_PRESS)) {
-        if ((machinePosition - hom) >= -1.0f) {
-            machinePosition -= MACHINE_SPEED;
+        if ((machinePosition - Options::Machine::size / 2) >= -1.0f) {
+            machinePosition -= Options::Machine::speed;
         }
     }
     
     // Нажата правая стрелка
     if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS || glfwGetKey('D') == GLFW_PRESS) {
-        if ((machinePosition + hom) <= 1.0f) {
-            machinePosition += MACHINE_SPEED;
+        if ((machinePosition + Options::Machine::size / 2) <= 1.0f) {
+            machinePosition += Options::Machine::speed;
         }
     }
 }
 
 void Game::drawAllOpponents() {
-    opponentSpeed *= FRAG_ACCELERATION;
+    opponentSpeed *= Options::Frag::acceleration;
     std::vector<Opponent>::iterator oi;
     for (oi = opponents.begin(); oi < opponents.end(); ++oi) {
         (*oi).coord.x = sin((*oi).coord.y + (*oi).startShift);
@@ -227,7 +227,7 @@ void Game::drawAllBonuses() {
 }
 
 void Game::drawKillMachine() {
-    float h = MACHINE_SIZE / 2;
+    float h = Options::Machine::size / 2;
     glBegin(GL_POLYGON);
         Drawer::setColor(0.2f, 0.2f, 0.2f);
         glVertex2f(machinePosition - h, -1.0f);
@@ -245,7 +245,7 @@ void Game::drawAllBullets() {
     std::vector<Bullet>::iterator bi;
     for (bi = bullets.begin(); bi < bullets.end(); ++bi) {
         // Перемещаем патрон вверх
-        if (((*bi).coord.y += BULLET_SPEED) > 1.0f) {
+        if (((*bi).coord.y += Options::Bullet::speed) > 1.0f) {
             bullets.erase(bi);
             continue;
         }
@@ -256,7 +256,7 @@ void Game::drawAllBullets() {
 
 void Game::drawBullet(Bullet b) {
     Drawer::setColor(1.0f, 1.0f, 0.0f);
-    Drawer::drawCircle(b.coord.x, b.coord.y, BULLET_SIZE, 10, true);
+    Drawer::drawCircle(b.coord.x, b.coord.y, Options::Bullet::size, 10, true);
 }
 
 void Game::drawOpponent(Opponent o) {
@@ -274,7 +274,7 @@ void Game::drawBonus(Bonus b) {
 int main(int argc, char ** argv) {
     // Включаем рандомизатор
     srand(time(NULL));
-    game.parseOptions(argc, argv, "f");
+    game.parseOptions(argc, argv, "f:w");
     game.initAudioSystem();
     int height, width;
     height = WINDOW_MODE_HEIGHT;

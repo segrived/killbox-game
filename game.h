@@ -22,9 +22,10 @@ class Game {
         std::vector<Bullet> bullets;
         std::vector<Opponent> opponents;
         std::vector<Bonus> bonuses;
+        std::vector<Timer> timers;
     public:
         Game();
-        Coord<int ,2> getWindowSize();
+        Coord<int> getWindowSize();
         void onKeyPress(int key, int action);
         void initAudioSystem();
         void initGraphicSystem(int width, int height, const char* title);
@@ -43,6 +44,7 @@ class Game {
         void drawAvailableLifes();
         void drawBonus(Bonus b);
         void drawAllBonuses();
+        void createNewBonus();
 };
 
 #endif

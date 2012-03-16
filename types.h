@@ -1,12 +1,16 @@
+#include <functional>
+
 #ifndef TYPES_H_GUARD
 #define TYPES_H_GUARD
 
-template < typename type, int count >
-class Coord {
+template <typename type> class Coord {
 	public:
+        Coord() {};
+        Coord(type _x, type _y): x(_x), y(_y) {};
+        Coord(type _x, type _y, type _z): x(_x), y(_y), z(_z) {};
 		type x;
-		type y;
-		type z;
+        type y;
+        type z;
 };
 
 struct Color {
@@ -16,7 +20,7 @@ struct Color {
 };
 
 struct Bullet {
-    Coord<float, 3> coord;
+    Coord<float> coord;
 };
 
 typedef enum {
@@ -31,8 +35,9 @@ typedef enum {
     MODE_WINDOW, MODE_FULLSCREEN
 } AppMode;
 
+
 struct Opponent {
-    Coord<float, 2> coord;
+    Coord<float> coord;
     int lifes;
     float size;
     float startShift;
@@ -41,8 +46,9 @@ struct Opponent {
 };
 
 struct Bonus {
-    Coord<float, 2> coord;
+    Coord<float> coord;
     BonusType type;
 };
+
 
 #endif

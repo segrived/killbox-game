@@ -32,11 +32,8 @@ void Drawer::drawHeart(float x, float y, float size) {
 }
 
 void Drawer::drawCircle(float cx, float cy, float r, int segments, bool filled) {
-    if(filled) {
-        glBegin(GL_POLYGON); 
-    } else {
-        glBegin(GL_LINE_STRIP); 
-    }
+    GLenum fillMode = (filled) ? GL_POLYGON : GL_LINE_STRIP;
+    glBegin(fillMode);
     for(int i = 0; i < segments; i++) {
         float theta = 2.0f * M_PI * float(i) / float(segments);
         float x = r * cosf(theta);
