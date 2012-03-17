@@ -184,13 +184,10 @@ void Game::drawScene() {
         && (*bonusIter).coord.y -halfOfBonus <= -0.95f) {
             switch((*bonusIter).type) {
                 case BONUS_LIFE:
-                    lifes++;
-                    break;
+                    lifes++; break;
                 case BONUS_POINTS:
-                    score += 1000;
-                    break;
-                default:
-                    break;
+                    score += 1000; break;
+                default: break;
             }
             bonuses.erase(bonusIter);
         }
